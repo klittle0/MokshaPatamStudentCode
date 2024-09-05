@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Moksha Patam
@@ -22,73 +24,51 @@ public class MokshaPatam {
         System.out.println(Arrays.deepToString(ladders));
         System.out.println(Arrays.deepToString(snakes));
 
+        int[] boardSpots = new int[boardsize];
+        int end = boardsize;
+        int start = 1;
         int moves = 0;
-        // Sort ladders by starting position to make traversing easier
-        // Call quicksort method
-        quickSort(ladders);
-        System.out.println(Arrays.deepToString(ladders));
 
-        // Use recursion to consider all possible combos of ladders.
+        Queue<Integer> toBeVisited = new LinkedList<>();
 
-        // For each combo, add # of moves to reach start of ladders, # of moves b/w ladders, and # of moves to reach end
-        // Store all of these counts in an arraylist
-        // Return lowest value in arraylist
+        toBeVisited.add(start);
+
+
+
         return 0;
     }
 
-    // Reference code: https://www.geeksforgeeks.org/quick-sort-algorithm/
-    // Quicksort used to organize ladders
-    public static void quickSort(int[][] ladders){
-        // Find low & high start values for quicksort
-        int low = 100;
-        int high = 1;
-        for (int[] ladder: ladders){
-            if (ladder[0] > high) {
-                high = ladder[0];
-            }
-            if (ladder[0] < low) {
-                low = ladder[0];
-            }
+    public void BFS(int current, Queue<Integer> toBeVisited, int[][] ladders, int[][] snakes){
+        // Base Case is when end of board is reached:
+        if (current == 100){
+            return;
         }
-        quickSortHelper(ladders, low, high);
-    }
-
-    // Change return type
-    // Quicksort helper method
-    public static void quickSortHelper(int[][] ladders, int low, int high){
-        if (low < high){
-            // Get pivot index of array
-            int pivot = partition(ladders, low, high);
-            // Sort ladders by start value on both sides of the pivot
-            // Recursion!
-            quickSortHelper(ladders, low, pivot - 1);
-            quickSortHelper(ladders, pivot + 1, high);
-        }
-    }
-
-    // Put all smaller values on left of pivot & bigger values on right
-    public static int partition(int[][] ladders, int low, int high){
-        // Pivot = last element's start value
-        int pivot = ladders[high][0];
-        // Index of element smaller than pivot
-        int i = low - 1;
-
-        for (int j = low; j < high; j++){
-            // If current element's start value is smaller than or equal to pivot's start value
-            if (ladders[j][0] <= pivot){
-                // Swap smaller & larger elements
-                int[] temp = ladders[i];
-                ladders[i] = ladders[j];
-                ladders[j] = temp;
+        // Check to see if current space is the start of any snake or ladder
+        for (int[] ladder : ladders){
+            if (current == ladder[0]){
+                toBeVisited.add(ladder[0]);
+                break;
+            }
+            else if (current == snakes[0]){
+               toBeVisited.add(snakes[0]);
+                break;
             }
         }
+        // I need to move this so it actually works!!
+        // If current space doesn't equal ladder or snake start, add 6 following spaces
+        for (int i = 0; i < 6; i++){
+            toBeVisited.add(current + i);
+        }
 
-        // Swap elements into proper positions
-        int[] temp2 = ladders[i + 1];
-        ladders[i + 1] = ladders[high];
-        ladders[high] = temp2;
+        // Recursive BFS call
+        BFS(toBeVisited.remove(), toBeVisited, ladders, snakes);
 
-        return i + 1;
+
+        // If the # corresponds to the start of any snakes or ladders, actually just add the ending point
+        // Otherwise, just add the # on the board itself
+
     }
+
+
 }
 
