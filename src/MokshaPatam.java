@@ -25,50 +25,54 @@ public class MokshaPatam {
         System.out.println(Arrays.deepToString(snakes));
 
         int[] boardSpots = new int[boardsize];
-        int end = boardsize;
-        int start = 1;
-        int moves = 0;
-
+        // Each index represents each square, and each corresponding value represents # of rolls to get there
+        int[] rollCounts = new int[boardsize + 1];
+        int[] snakesAndLadders = new int[boardsize + 1];
+        boolean[] visited = new boolean[boardsize + 1];
         Queue<Integer> toBeVisited = new LinkedList<>();
+        int current = 1;
+        int next = 1;
 
-        toBeVisited.add(start);
-
-
-
-        return 0;
-    }
-
-    public void BFS(int current, Queue<Integer> toBeVisited, int[][] ladders, int[][] snakes){
-        // Base Case is when end of board is reached:
-        if (current == 100){
-            return;
+        // Map all snakes and ladders to the "dictionary" that tracks their starts & ends
+        // start = index, end = corresponding value
+        for (int[] ladder : ladders) {
+            // Is the ladder call correct??
+            snakesAndLadders[ladder[0]] = ladder[1];
         }
-        // Check to see if current space is the start of any snake or ladder
-        for (int[] ladder : ladders){
-            if (current == ladder[0]){
-                toBeVisited.add(ladder[0]);
-                break;
+        for (int[] snake : snakes) {
+            snakesAndLadders[snake[0]] = snake[1];
+        }
+
+        toBeVisited.add(current);
+        rollCounts[current] = 0;
+
+        while (!toBeVisited.isEmpty()){
+            current = toBeVisited.remove();
+            visited[current] = true;
+
+            if (current == boardsize){
+                return rollCounts[current];
             }
-            else if (current == snakes[0]){
-               toBeVisited.add(snakes[0]);
-                break;
+            // i = 1 through 6 to represent all possible dice rolls
+            for (int i = 1; i < 7; i++){
+                next = current + i;
+                if (next <= boardsize){
+                    // If a snake or ladder begins there
+                    if (snakesAndLadders[next] != 0){
+                        next = snakesAndLadders[next];
+                    }
+                    // If next node has never been visited:
+                    if (!visited[next]){
+                        // Increment the roll count by 1
+                        rollCounts[next] = rollCounts[current] + 1;
+                        toBeVisited.add(next);
+                    }
+                }
+
             }
         }
-        // I need to move this so it actually works!!
-        // If current space doesn't equal ladder or snake start, add 6 following spaces
-        for (int i = 0; i < 6; i++){
-            toBeVisited.add(current + i);
-        }
-
-        // Recursive BFS call
-        BFS(toBeVisited.remove(), toBeVisited, ladders, snakes);
-
-
-        // If the # corresponds to the start of any snakes or ladders, actually just add the ending point
-        // Otherwise, just add the # on the board itself
-
+        // Signals that board is impossible to win
+        return -1;
     }
-
-
 }
 
