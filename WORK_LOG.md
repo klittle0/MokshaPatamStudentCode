@@ -7,7 +7,7 @@ Name: YOUR NAME HERE
 | Sep 2 | 3:30-4:30 |                                                        I realized my new idea would not account for all possibilities, so I switched back to a recursive approach. I drafted a quicksort method & wrote pseudocode. |
 | Sep 4 | 2:30-3:00 | After class, I realized that a quicksort method wouldn't help the efficiency of my recursive approach in any way, but I realized that I was on the right track to think about recursion. I implemented a BFS search |
 | Sep 5 | 2:30-3:00 |                                               After Mr. Blick's presentation, I realized that BFS without recursion would be better for this problem set. I altered my old algorithm so that there wasn't recursion |
-|       |           |                                                                                                                                                                                                                     |
+| Sep 5 | 3:30-4:00 |                                                                                                               I completed my BFS solution, optimizing for efficiency with arrays used in the style of dictionaries. |
 
 
 To add a new row to the table, click into a cell and then hit shift-enter.

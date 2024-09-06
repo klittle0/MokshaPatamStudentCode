@@ -9,7 +9,7 @@ import java.util.Queue;
  * for Adventures in Algorithms
  * at Menlo School in Atherton, CA
  *
- * Completed by: [YOUR NAME HERE]
+ * Completed by: Kate Little
  *
  */
 
@@ -20,18 +20,14 @@ public class MokshaPatam {
      *  to reach the final square on a board with the given size, ladders, and snakes.
      */
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
-        System.out.println("boardsize: " + boardsize);
-        System.out.println(Arrays.deepToString(ladders));
-        System.out.println(Arrays.deepToString(snakes));
-
-        int[] boardSpots = new int[boardsize];
         // Each index represents each square, and each corresponding value represents # of rolls to get there
         int[] rollCounts = new int[boardsize + 1];
+        // Maps the locations of all snakes & ladders
         int[] snakesAndLadders = new int[boardsize + 1];
+        // Tracks whether a space has been visited before
         boolean[] visited = new boolean[boardsize + 1];
         Queue<Integer> toBeVisited = new LinkedList<>();
         int current = 1;
-        int next = 1;
 
         // Map all snakes and ladders to the "dictionary" that tracks their starts & ends
         // start = index, end = corresponding value
@@ -55,17 +51,27 @@ public class MokshaPatam {
             }
             // i = 1 through 6 to represent all possible dice rolls
             for (int i = 1; i < 7; i++){
-                next = current + i;
+                int next = current + i;
+                // Ensures you can't go beyond the last board space
                 if (next <= boardsize){
-                    // If a snake or ladder begins there
+                    // If a snake or ladder begins at next proposed space
                     if (snakesAndLadders[next] != 0){
                         next = snakesAndLadders[next];
                     }
                     // If next node has never been visited:
                     if (!visited[next]){
-                        // Increment the roll count by 1
-                        rollCounts[next] = rollCounts[current] + 1;
-                        toBeVisited.add(next);
+                        // Increment the roll count, but only if it shows a more efficient path
+                        if (rollCounts[next] == 0){
+                            rollCounts[next] = rollCounts[current] + 1;
+                            toBeVisited.add(next);
+                        }
+                        // If new # of rolls beats the old, replace it
+                        else if (rollCounts[current] + 1 < rollCounts[next]){
+                            rollCounts[next] = rollCounts[current] + 1;
+                            toBeVisited.add(next);
+                        }
+                        // Otherwise, don't add the next space to the "toBeVisited" because it is already
+                        // less efficient than an existing option
                     }
                 }
 
