@@ -22,9 +22,9 @@ public class MokshaPatam {
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
         // Each index represents each square, and each corresponding value represents # of rolls to get there
         int[] rollCounts = new int[boardsize + 1];
-        // Maps the locations of all snakes & ladders
+        // Maps the starts & ends of all snakes & ladders
         int[] snakesAndLadders = new int[boardsize + 1];
-        // Tracks whether a space has been visited before
+        // Tracks whether a space has been visited before. Index = square #, value = true/false
         boolean[] visited = new boolean[boardsize + 1];
         Queue<Integer> toBeVisited = new LinkedList<>();
         int current = 1;
@@ -32,7 +32,6 @@ public class MokshaPatam {
         // Map all snakes and ladders to the "dictionary" that tracks their starts & ends
         // start = index, end = corresponding value
         for (int[] ladder : ladders) {
-            // Is the ladder call correct??
             snakesAndLadders[ladder[0]] = ladder[1];
         }
         for (int[] snake : snakes) {
@@ -44,29 +43,26 @@ public class MokshaPatam {
 
         while (!toBeVisited.isEmpty()){
             current = toBeVisited.remove();
+            // Help track which nodes are visited so you don't revisit any later on
             visited[current] = true;
 
+            // If you have reached the end
             if (current == boardsize){
                 return rollCounts[current];
             }
             // i = 1 through 6 to represent all possible dice rolls
             for (int i = 1; i < 7; i++){
                 int next = current + i;
-                // Ensures you can't go beyond the last board space
+                // Ensure you can't go beyond the last board space
                 if (next <= boardsize){
-                    // If a snake or ladder begins at next proposed space
+                    // If a snake or ladder begins at next proposed space, actual next space = end of snake/ladder
                     if (snakesAndLadders[next] != 0){
                         next = snakesAndLadders[next];
                     }
                     // If next node has never been visited:
                     if (!visited[next]){
                         // Increment the roll count, but only if it shows a more efficient path
-                        if (rollCounts[next] == 0){
-                            rollCounts[next] = rollCounts[current] + 1;
-                            toBeVisited.add(next);
-                        }
-                        // If new # of rolls beats the old, replace it
-                        else if (rollCounts[current] + 1 < rollCounts[next]){
+                        if (rollCounts[next] == 0 || rollCounts[current] + 1 < rollCounts[next]){
                             rollCounts[next] = rollCounts[current] + 1;
                             toBeVisited.add(next);
                         }
@@ -74,7 +70,6 @@ public class MokshaPatam {
                         // less efficient than an existing option
                     }
                 }
-
             }
         }
         // Signals that board is impossible to win
