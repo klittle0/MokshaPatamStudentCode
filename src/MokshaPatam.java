@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,10 +13,8 @@ import java.util.Queue;
 
 public class MokshaPatam {
 
-    /**
-     * TODO: Complete this function, fewestMoves(), to return the minimum number of moves
-     *  to reach the final square on a board with the given size, ladders, and snakes.
-     */
+    //Return the minimum number of moves to reach the final square on a board
+    // With the given size, ladders, and snakes.
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
         // Each index represents each square, and each corresponding value represents # of rolls to get there
         int[] rollCounts = new int[boardsize + 1];
